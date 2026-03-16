@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================
+   Design Tokens
+   ============================ */
+:root {
+  --color-bg:             #0d1117;
+  --color-surface:        #141a22;
+  --color-surface-2:      #1a222d;
+  --color-surface-offset: #1e2733;
+  --color-border:         #2a3441;
+  --color-divider:        #222c38;
+  --color-text:           #e1e4e8;
+  --color-text-muted:     #8b949e;
+  --color-text-faint:     #565e68;
+  --color-brent:          #f0883e;
+  --color-wti:            #58a6ff;
+  --color-spike:          #ff6b6b;
+  --color-crash:          #40c463;
+  --color-elevated:       #f9c74f;
+  --color-war-zone:       rgba(255, 80, 80, 0.08);
+  --color-war-border:     rgba(255, 80, 80, 0.35);
+  --color-accent:         #f0883e;
+  --color-news:           #58a6ff;
+}
+
+.light {
+  --color-bg:             #f4f5f7;
+  --color-surface:        #ffffff;
+  --color-surface-2:      #f9fafb;
+  --color-surface-offset: #eef0f3;
+  --color-border:         #d1d5db;
+  --color-divider:        #e5e7eb;
+  --color-text:           #1f2937;
+  --color-text-muted:     #6b7280;
+  --color-text-faint:     #9ca3af;
+  --color-brent:          #d96c1e;
+  --color-wti:            #2563eb;
+  --color-spike:          #dc2626;
+  --color-crash:          #16a34a;
+  --color-elevated:       #ca8a04;
+  --color-war-zone:       rgba(220, 38, 38, 0.06);
+  --color-war-border:     rgba(220, 38, 38, 0.3);
+  --color-accent:         #d96c1e;
+  --color-news:           #2563eb;
+}
+
+/* ============================
+   Base
+   ============================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: rgba(240, 136, 62, 0.25);
+  color: var(--color-text);
+}
+
+/* Chart-specific */
+.axis text { fill: var(--color-text-muted); font-size: 11px; }
+.axis line, .axis path { stroke: var(--color-divider); }
+.grid line { stroke: var(--color-divider); stroke-opacity: 0.5; stroke-dasharray: 2,4; }
+.grid path { stroke: none; }
+
+/* Tooltip */
+.chart-tooltip {
+  position: absolute;
+  pointer-events: none;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--color-text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 10;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+.chart-tooltip.visible { opacity: 1; }
+
+/* Live pulse */
+@keyframes pulse-live {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-dot {
+  animation: pulse-live 2s ease-in-out infinite;
+}
+
+/* News ticker */
+@keyframes ticker-fade {
+  0% { opacity: 0; transform: translateY(8px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
