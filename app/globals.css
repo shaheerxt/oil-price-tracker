@@ -105,12 +105,18 @@ body {
   animation: pulse-live 2s ease-in-out infinite;
 }
 
-/* News ticker */
-@keyframes ticker-fade {
-  0% { opacity: 0; transform: translateY(8px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-8px); }
+/* News ticker horizontal scroll */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-scroll {
+  animation: ticker-scroll 80s linear infinite;
+}
+
+.ticker-scroll:hover {
+  animation-play-state: paused;
 }
 
 /* Scrollbar */

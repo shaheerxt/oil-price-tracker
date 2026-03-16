@@ -1,6 +1,12 @@
 'use client';
 
+import { useState, useEffect, useRef } from 'react';
+
 export default function NewsTicker({ articles }) {
+  const [isPaused, setIsPaused] = useState(false);
+  const scrollRef = useRef(null);
+  const [speed, setSpeed] = useState(1);
+
   if (!articles || articles.length === 0) return null;
 
   const formatTime = (dateStr) => {
@@ -14,44 +20,62 @@ export default function NewsTicker({ articles }) {
     return `${Math.floor(diffHrs / 24)}d ago`;
   };
 
+  // Duplicate articles for seamless loop
+  const items = [...articles.slice(0, 10), ...articles.slice(0, 10)];
+
   return (
-    <section className="mt-6 mb-4">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[var(--color-news)]">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-[var(--color-news)]">
-            <path d="M4 22h16a2 2 0 002-2V4a2 2 0 00-2-2H8a2 2 0 00-2 2v16a2 2 0 01-2 2zm0 0a2 2 0 01-2-2v-9c0-1.1.9-2 2-2h2"/>
-            <path d="M18 14h-8M18 18h-8M18 10h-8"/>
-          </svg>
-          Latest News
-        </span>
-        <span className="live-dot w-1.5 h-1.5 rounded-full bg-[var(--color-news)]"></span>
-      </div>
-      <div className="grid gap-2">
-        {articles.slice(0, 6).map((article, i) => (
-          <a
-            key={i}
-            href={article.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-start gap-3 p-3 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] hover:border-[var(--color-news)] transition-colors"
-          >
-            <span className="shrink-0 mt-0.5 w-1.5 h-1.5 rounded-full bg-[var(--color-news)] opacity-60 group-hover:opacity-100 transition-opacity"></span>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm leading-snug text-[var(--color-text)] group-hover:text-[var(--color-news)] transition-colors line-clamp-2">
-                {article.title}
-              </p>
-              <div className="flex items-center gap-2 mt-1">
-                <span className="text-[10px] font-mono text-[var(--color-text-faint)]">{article.source}</span>
-                <span className="text-[10px] text-[var(--color-text-faint)]">·</span>
-                <span className="text-[10px] font-mono text-[var(--color-text-faint)]">{formatTime(article.publishedAt)}</span>
-              </div>
+    <div className="mt-4 mb-2">
+      {/* Ticker bar */}
+      <div
+        className="relative overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+      >
+        <div className="flex items-center h-11">
+          {/* Label */}
+          <div className="shrink-0 flex items-center gap-1.5 px-4 h-full border-r border-[var(--color-divider)] bg-[var(--color-surface-offset)]">
+            <span className="live-dot w-1.5 h-1.5 rounded-full bg-[var(--color-news)]"></span>
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-[var(--color-news)] whitespace-nowrap">
+              Latest
+            </span>
+          </div>
+
+          {/* Scrolling track */}
+          <div className="flex-1 overflow-hidden relative">
+            {/* Fade edges */}
+            <div className="absolute left-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{background: 'linear-gradient(to right, var(--color-surface), transparent)'}} />
+            <div className="absolute right-0 top-0 bottom-0 w-8 z-10 pointer-events-none" style={{background: 'linear-gradient(to left, var(--color-surface), transparent)'}} />
+
+            <div
+              ref={scrollRef}
+              className="flex items-center gap-0 whitespace-nowrap ticker-scroll"
+              style={{
+                animationPlayState: isPaused ? 'paused' : 'running',
+                animationDuration: `${Math.max(40, articles.length * 8)}s`,
+              }}
+            >
+              {items.map((article, i) => (
+                <a
+                  key={i}
+                  href={article.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-3 px-5 py-2 hover:text-[var(--color-news)] transition-colors group shrink-0"
+                >
+                  <span className="w-1 h-1 rounded-full bg-[var(--color-news)] opacity-50 group-hover:opacity-100 shrink-0"></span>
+                  <span className="text-sm text-[var(--color-text)] group-hover:text-[var(--color-news)] transition-colors">
+                    {article.title}
+                  </span>
+                  <span className="text-[10px] font-mono text-[var(--color-text-faint)] shrink-0">
+                    {article.source} · {formatTime(article.publishedAt)}
+                  </span>
+                  <span className="text-[var(--color-divider)] mx-1 shrink-0">|</span>
+                </a>
+              ))}
             </div>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 mt-1 text-[var(--color-text-faint)] group-hover:text-[var(--color-news)] transition-colors">
-              <path d="M7 17L17 7M17 7H7M17 7v10"/>
-            </svg>
-          </a>
-        ))}
+          </div>
+        </div>
       </div>
-    </section>
+    </div>
   );
 }
