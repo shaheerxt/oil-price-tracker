@@ -8,12 +8,12 @@ export default function NewsTicker({ articles }) {
 
   const safeArticles = articles || [];
 
-  // Calculate duration based on content width — target ~70px/s (broadcast standard)
+  // Calculate duration based on content width — target ~150px/s (CNBC/Bloomberg speed)
   useEffect(() => {
     if (trackRef.current && safeArticles.length > 0) {
       const halfWidth = trackRef.current.scrollWidth / 2;
-      const speed = 70; // px/s — fast enough to feel alive, slow enough to scan
-      setDuration(Math.max(15, halfWidth / speed));
+      const speed = 150; // px/s — matches broadcast financial tickers
+      setDuration(Math.max(8, halfWidth / speed));
     }
   }, [safeArticles]);
 
