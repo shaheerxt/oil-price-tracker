@@ -107,12 +107,15 @@ body {
 
 /* News ticker horizontal scroll */
 @keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .ticker-scroll {
-  animation: ticker-scroll 80s linear infinite;
+  animation: ticker-scroll var(--ticker-duration, 30s) linear infinite;
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .ticker-scroll:hover {
