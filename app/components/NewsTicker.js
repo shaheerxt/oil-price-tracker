@@ -12,7 +12,7 @@ export default function NewsTicker({ articles }) {
   useEffect(() => {
     if (trackRef.current && safeArticles.length > 0) {
       const halfWidth = trackRef.current.scrollWidth / 2;
-      const speed = 150; // px/s — matches broadcast financial tickers
+      const speed = 300; // px/s — fast trading-floor ticker
       setDuration(Math.max(8, halfWidth / speed));
     }
   }, [safeArticles]);
