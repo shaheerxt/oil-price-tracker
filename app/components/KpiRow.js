@@ -1,5 +1,7 @@
 'use client';
 
+import { formatYearMonth } from '../../lib/format-dates';
+
 export default function KpiRow({ oilData, livePrices }) {
   const latest = oilData[oilData.length - 1];
   const prev = oilData[oilData.length - 2];
@@ -15,7 +17,7 @@ export default function KpiRow({ oilData, livePrices }) {
     if (d.brent > peak.brent) { peak = { brent: d.brent, date: d.date }; }
   });
 
-  const peakDate = peak.date ? new Date(peak.date + '-01').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '';
+  const peakDate = peak.date ? formatYearMonth(peak.date) : '';
 
   const cards = [
     {

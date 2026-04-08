@@ -111,8 +111,12 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-3">
             {lastUpdated && (
-              <span className="text-[10px] font-mono text-[var(--color-text-faint)] hidden sm:block">
-                Updated {lastUpdated.toLocaleTimeString()}
+              <span
+                suppressHydrationWarning
+                className="text-[10px] font-mono text-[var(--color-text-faint)] hidden sm:block"
+              >
+                Updated{' '}
+                {lastUpdated.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' })}
               </span>
             )}
             <ThemeToggle />

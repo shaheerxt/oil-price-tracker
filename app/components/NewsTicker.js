@@ -1,12 +1,25 @@
 'use client';
 
 import { useRef, useEffect, useState } from 'react';
+import { formatYearMonthDay } from '../../lib/format-dates';
+
+/** ISO 8601 datetime → YYYY-MM-DD slice, formatted without timezone ambiguity */
+function labelFromPublishedAt(iso) {
+  if (!iso || typeof iso !== 'string') return '—';
+  const day = iso.slice(0, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(day) ? formatYearMonthDay(day) : '—';
+}
 
 export default function NewsTicker({ articles }) {
   const trackRef = useRef(null);
   const [duration, setDuration] = useState(30);
+  const [mounted, setMounted] = useState(false);
 
   const safeArticles = articles || [];
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Calculate duration based on content width — target ~150px/s (CNBC/Bloomberg speed)
   useEffect(() => {
@@ -21,9 +34,14 @@ export default function NewsTicker({ articles }) {
 
   const formatTime = (dateStr) => {
     const d = new Date(dateStr);
-    const now = new Date();
-    const diffMs = now - d;
-    const diffMins = Math.floor(diffMs / 60000);
+    if (Number.isNaN(d.getTime())) return '—';
+    if (!mounted) {
+      return labelFromPublishedAt(dateStr);
+    }
+    const now = Date.now();
+    const diffMs = now - d.getTime();
+    const diffMins = Math.max(0, Math.floor(diffMs / 60000));
+    if (diffMins < 1) return 'now';
     if (diffMins < 60) return `${diffMins}m`;
     const diffHrs = Math.floor(diffMins / 60);
     if (diffHrs < 24) return `${diffHrs}h`;
